@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+	Author:		Bill Sun
+	Page Name:	lightwave.html
+
+	Revision History:
+		[2018-07-04] created page
+-->
+<html lang="en">
+	<script src="../js/javascript.js"></script>
+<head>
+	<meta charset="utf-8">
+	<title>Portfolio - LightWave</title>
+	<link rel="stylesheet" href="../styles/normalize.css">
+	<link rel="stylesheet" href="../styles/style.css">
+</head>
+<body onload="focusThis()">
+	<header>
+		<p>Portfolio</p>
+		<h1>NewTek LightWave Models & Renders</h1>
+		<p>./pages/lightwave.html</p>
+		<br>
+	</header>
+	
+	<nav id="nav_menu">
+		<ul>
+			<li><a href="../index.html">Home</a></li>
+			<li><a href="#">Coding</a>
+				<ul>
+					<li><a href="./csharp.html">C#</a>
+						<ul>
+							<li><a href="./csharpExamples/monoGame/monoGame.html">MonoGame Projects</a></li>
+							<li><a href="./csharpExamples/winForms/winForms.html">Windows Forms</a></li>
+						</ul>
+					</li>
+					<li><a href="./webCode.html">HTML/JS/PHP</a></li>
+				</ul>
+			</li>
+			<li><a href="#" class="current">3D Modelling</a>
+				<ul>
+					<li><a href="#">NewTek LightWave</a></li>
+					<li><a href="./gameMods.html">Video Game Mods</a>
+						<ul>
+							<li><a href="./gameMods/modsKSP.html">Kerbal Space Program</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><a href="./contact.html">About & Contact Me</a></li>
+		</ul>
+	</nav>
+	
+	<main>
+		<br>
+
+		<p>Here are some 3D models made using NewTek LightWave.</p>
+		<p>NewTek LightWave is a 3D modelling program developed by NewTek, and has been used in film, television, motion graphics, 
+			digital matte painting, visual effects, video games development, product design, architectural visualizations, virtual production, 
+			music videos, pre-visualizations and advertising<sup><a href="https://en.wikipedia.org/wiki/LightWave_3D" target="_blank">[Wikipedia]</a></sup>.</p>
+
+		<p>I taught myself how to 3D model using LightWave in my senior year of highschool, and now uses it to make the models for use in the mods I make
+			for some of the video games I play.</p>
+
+		<p>Below are some of my earlier works.</p>
+			
+		<br>
+
+		<div class="slideshowContainer">
+
+			<div class="mySlides fade">
+			  	<img src="../images/b5agamemnon.jpg" style="width:800px">
+			  	<div class="text">Babylon 5: EAS Agamemnon</div>
+			</div>
+			
+			<div class="mySlides fade">
+			  	<img src="../images/m2tankBogie.jpg" style="width:800px">
+				<div class="text">M2 Tank Wheel Bogie</div>
+			</div>
+			
+			<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+			<a class="next" onclick="plusSlides(1)">&#10095;</a>
+			
+		</div>
+		
+		<br>
+			
+		<div style="text-align:center">
+			<span class="dot" onclick="currentSlide(1)"></span> 
+			<span class="dot" onclick="currentSlide(2)"></span> 
+		</div>	
+
+		<br>
+	</main>
+	<footer>
+		<br>
+		<hr>
+		<p style="text-align: right">Bill Sun</p>
+	</footer>
+
+	<script>
+			showSlides(1);
+	</script>
+</body>
+</html>

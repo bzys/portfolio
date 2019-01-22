@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<!--
+	Author:		Bill Sun
+	Page Name:	winFormsAirRes.html
+	
+    Revision History:
+        [2019-01-04] revised page
+		[2018-07-22] created page
+-->
+<html lang="en">
+<body>
+	<a href="./winForms.html">[Back]</a>
+	<br>
+<pre>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace bsunProg1815A1
+{
+    public partial class airlineReservationSystem : Form
+    {
+        const int cNumRows = 3;
+        const int cNumCols = 5;
+        const int waitListMax = 10;
+        /*
+         * Variable Name:   airlineSeats
+         * Type:            2d string array
+         * Description:     string array to hold the passenger names
+         */
+        string[,] cAirlineSeats = new string[cNumRows, cNumCols]  
+        {    
+            {"A1","A2","A3","A4","A5"},
+            {"B1","B2","B3","B4","B5"},
+            {"C1","C2","C3","C4","C5"}
+        };
+        /*
+         * Variable Name:   airlineSeatsAvailability
+         * Type:            2d bool array
+         * Description:     true/false for if seat is available or not
+         */
+        bool[,] cAirlineSeatsAvailability = new bool[cNumRows, cNumCols]
+        {
+            {true, true, true, true, true},
+            {true, true, true, true, true},
+            {true, true, true, true, true}
+        };
+
+        /*----button array----*/
+
+        Button[,] seatButtonArray = new Button[cNumRows, cNumCols];
+
+        /*----button array----*/
+
+        string[] waitListList = new string[waitListMax] { "", "", "", "", "", "", "", "", "", ""};
+
+        string cUserRow = "";
+        string cUserCol = "";
+
+        int cUserRowIndex = -1;
+        int cUserColIndex = -1;
+
+        bool cAllSeatsFull = false;
+        bool cWaitListFull = false;
+
+        /*------------------Class variable declaration ends------------------*/
+
+        public airlineReservationSystem()
+        {
+            InitializeComponent();
+
+            /*--initailizing button arrray--*/
+
+            seatButtonArray[0, 0] = buttonA1;
+            seatButtonArray[0, 1] = buttonA2;
+            seatButtonArray[0, 2] = buttonA3;
+            seatButtonArray[0, 3] = buttonA4;
+            seatButtonArray[0, 4] = buttonA5;
+
+            seatButtonArray[1, 0] = buttonB1;
+            seatButtonArray[1, 1] = buttonB2;
+            seatButtonArray[1, 2] = buttonB3;
+            seatButtonArray[1, 3] = buttonB4;
+            seatButtonArray[1, 4] = buttonB5;
+
+            seatButtonArray[2, 0] = buttonC1;
+            seatButtonArray[2, 1] = buttonC2;
+            seatButtonArray[2, 2] = buttonC3;
+            seatButtonArray[2, 3] = buttonC4;
+            seatButtonArray[2, 4] = buttonC5;
+
+            /*--highlighting listbox to default seat A1 for the sake of consistency--*/
+
+            ResetFields();
+        }
+
+        /*----------------------------My methods starts--------------------------*/
+
+        /*Changing border color on the groupbox for plane seats. Learned how to do from here: https://stackoverflow.com/questions/76455/how-do-you-change-the-color-of-the-border-on-a-group-box */
+        /*
+         * Method Name:     groupBoxSeats_Paint
+         * Parameters:      object sender, PaintEventArgs e
+         * Return:          none
+         * Description:     calls DrawGroupBox method, passing four parameters to it, the last parameter controls the color of the text box's border
+         *                  This method changes the border color for the groupBoxSeats group box
+         */
+        private void groupBoxSeats_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            DrawGroupBox(box, e.Graphics, Color.Red, Color.LightGray);
+        }
+
+        private void DrawGroupBox(GroupBox box, Graphics g, Color textColor, Color borderColor)
+        {
+            if (box != null)
+            {
+                Brush textBrush = new SolidBrush(textColor);
+                Brush borderBrush = new SolidBrush(borderColor);
+                Pen borderPen = new Pen(borderBrush);
+                SizeF strSize = g.MeasureString(box.Text, box.Font);
+                Rectangle rect = new Rectangle(box.ClientRectangle.X,
+                                               box.ClientRectangle.Y + (int)(strSize.Height / 2),
+                                               box.ClientRectangle.Width - 1,
+                                               box.ClientRectangle.Height - (int)(strSize.Height / 2) - 1);
+
+                // Clear text and border
+                g.Clear(this.BackColor);
+
+                // Draw text
+                g.DrawString(box.Text, box.Font, textBrush, box.Padding.Left, 0);
+
+                // Drawing Border
+                //Left
+                g.DrawLine(borderPen, rect.Location, new Point(rect.X, rect.Y + rect.Height));
+                //Right
+                g.DrawLine(borderPen, new Point(rect.X + rect.Width, rect.Y), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                //Bottom
+                g.DrawLine(borderPen, new Point(rect.X, rect.Y + rect.Height), new Point(rect.X + rect.Width, rect.Y + rect.Height));
+                //Top1
+                g.DrawLine(borderPen, new Point(rect.X, rect.Y), new Point(rect.X + box.Padding.Left, rect.Y));
+                //Top2
+                g.DrawLine(borderPen, new Point(rect.X + box.Padding.Left + (int)(strSize.Width), rect.Y), new Point(rect.X + rect.Width, rect.Y));
+            }
+        }
+        /*------------------------------Group box----------------------------*/
+
+        /*
+         * Method Name:     groupBoxBookings_Paint
+         * Parameters:      object sender, PaintEventArgs e
+         * Return:          none
+         * Description:     calls DrawGroupBox method, passing four parameters to it, the last parameter controls the color of the text box's border
+         *                  This method changes the border color for the groupBoxBookings group box
+         */
+        private void groupBoxBookings_Paint(object sender, PaintEventArgs e)
+        {
+            GroupBox box = sender as GroupBox;
+            DrawGroupBox(box, e.Graphics, Color.Red, Color.WhiteSmoke);
+        }
+        /*
+         * Method Name:     PopUpMessage
+         * Parameters:      messagePrompt
+         * Return:          none
+         * Description:     displays a messaged passed to it in a popup alert box 
+         */
+        public void PopUpMessage(string messagePrompt)
+        {
+            MessageBox.Show(messagePrompt, "Alert!");
+        }
+
+        public void ResetFields()
+        {
+            textBoxFirstName.Text = "";
+            textBoxLastName.Text = "";
+            listBoxRow.SelectedIndex = 0;
+            listBoxCol.SelectedIndex = 0;
+            labelSeatAvailabilityStatus.Text = "";
+            labelSeatAvailabilityStatus.BackColor = SystemColors.Window;
+            labelUserSeatSelection.Text = "";
+            cUserRow = "";
+            cUserCol = "";
+            cUserRowIndex = -1;
+            cUserColIndex = -1;
+        }
+
+        /*----------------------------My methods ends----------------------------*/
+
+        private void listBoxRow_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cUserRow = listBoxRow.SelectedItem.ToString();
+            labelUserSeatSelection.Text = "Seat " + cUserRow + cUserCol;
+
+            switch (cUserRow)
+            {
+                case "A":
+                    cUserRowIndex = 0;
+                    break;
+                case "B":
+                    cUserRowIndex = 1;
+                    break;
+                case "C":
+                    cUserRowIndex = 2;
+                    break;
+            }
+        }
+
+        private void listBoxCol_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cUserCol = listBoxCol.SelectedItem.ToString();
+            labelUserSeatSelection.Text = "Seat " + cUserRow + cUserCol;
+
+            cUserColIndex = int.Parse(cUserCol) - 1;
+        }
+
+        private void buttonSeatStatus_Click(object sender, EventArgs e)
+        {
+            if (cUserRowIndex == -1 || cUserColIndex == -1)
+            {
+                PopUpMessage("Please select a valid seat row and column to use the check seat availability function.");
+            }
+            else
+            {
+                if (cAirlineSeatsAvailability[cUserRowIndex, cUserColIndex] == true)
+                {
+                    labelSeatAvailabilityStatus.BackColor = Color.LightGreen;
+                    labelSeatAvailabilityStatus.Text = "Available";
+                }
+                else
+                {
+                    labelSeatAvailabilityStatus.BackColor = Color.OrangeRed;
+                    labelSeatAvailabilityStatus.Text = "Not Available";
+                }
+            } 
+        }
+
+        private void buttonBookSeat_Click(object sender, EventArgs e)
+        {
+            string customerName = "";
+            string userSeat = cUserRow + cUserCol;
+            bool allConditionsSatisfied = false;
+            bool placeOnWaitList = false;
+
+            if ((textBoxFirstName.Text == "") || (textBoxLastName.Text == ""))
+            {
+                PopUpMessage("You must enter your full name (first and last) to book a seat with Solaris Airlines. Please enter your full name in the provided field.");
+                allConditionsSatisfied = false;
+            }
+            else
+            {
+                customerName = textBoxLastName.Text + ", " + textBoxFirstName.Text;
+
+                if (cUserRow == "" || cUserCol == "")
+                {
+                    PopUpMessage("You must choose a valid seat selection, with both the row and column selected.");
+                    allConditionsSatisfied = false;
+                }
+                else
+                {
+                    cAllSeatsFull = true;
+
+                    for (int i = 0; i < cNumRows; i++)
+                    {
+                        for (int j = 0; j < cNumCols; j++)
+                        {
+                            if (cAirlineSeatsAvailability[i, j] == true)
+                            {
+                                cAllSeatsFull = false;
+                            }
+                        }
+                    }
+
+                    /*--------------------------------*/
+
+                    if (cAirlineSeatsAvailability[cUserRowIndex, cUserColIndex] == false && cAllSeatsFull == false)
+                    {
+                        PopUpMessage("The selected seat is not available. Please select an available seat.");
+                        allConditionsSatisfied = false;
+                    }
+                    else
+                    {
+                        allConditionsSatisfied = true;
+                    }
+
+                    /*--------------------------------*/
+
+                }
+            }
+
+            if (cAllSeatsFull == true)
+            {
+                PopUpMessage("All the seats are full. You will be place into the waiting list for the next available seat.\n" + "\n" +
+                    "Your seating choice may not be kept, and instead you will be given the first available seat.");
+                placeOnWaitList = true;
+            }
+
+            if (waitListList[waitListList.Length - 1] != "")
+            {
+                cWaitListFull = true;
+            }
+
+            if (cWaitListFull == true)
+            {
+                PopUpMessage("Unfortunately, there are no free seats, and the wait list is full.\n" + "\n" +
+                    "You are unable to book a seat or be placed onto the wait list.");
+                allConditionsSatisfied = false;
+                placeOnWaitList = false;
+            }
+
+            /*-----------------------execuational conditions end-------------------------*/
+
+            if (allConditionsSatisfied == true && placeOnWaitList == false)
+            {
+                cAirlineSeats[cUserRowIndex, cUserColIndex] = customerName;
+                cAirlineSeatsAvailability[cUserRowIndex, cUserColIndex] = false;
+
+                PopUpMessage("You have successfully booked seat " + cUserRow + cUserCol + " under " + textBoxFirstName.Text + " " + textBoxLastName.Text);
+
+                seatButtonArray[cUserRowIndex, cUserColIndex].BackColor = Color.OrangeRed;
+
+                ResetFields();
+
+                allConditionsSatisfied = false;
+            }
+            else if (placeOnWaitList == true)
+            {
+                if (waitListList[(waitListList.Length - 1)] == "")
+                {
+                    for (int i = 0; i < waitListList.Length; i++)
+                    {
+                        if (waitListList[i] == "")
+                        {
+                            waitListList[i] = customerName;
+                            PopUpMessage("You have been added to the waiting list. You are number " + (i + 1) + " in the waiting list.");
+                            i = waitListList.Length;
+                        }
+                    }
+                }
+                else
+                {
+                    cWaitListFull = true;
+                }
+
+            }
+        }
+
+        private void buttonCancelSeat_Click(object sender, EventArgs e)
+        {
+
+            string userSeat = cUserRow + cUserCol;
+
+            if (cUserRowIndex == -1 || cUserColIndex == -1)
+            {
+                PopUpMessage("Please make a valid seat selection when cancelling bookings.");
+            }
+            else if (cAirlineSeatsAvailability[cUserRowIndex, cUserColIndex] == true)
+            {
+                PopUpMessage("The seat you have selected to cancel bookings for is not booked by a customer.");
+            }
+            else
+            {
+                PopUpMessage("You have succesfully cancelled the booking for seat " + cUserRow + cUserCol + " for " + cAirlineSeats[cUserRowIndex, cUserColIndex] + ".");
+                cAirlineSeats[cUserRowIndex, cUserColIndex] = cUserRow + cUserCol;
+                cAirlineSeatsAvailability[cUserRowIndex, cUserColIndex] = true;
+
+                if (waitListList[0] == "")
+                {
+
+                    seatButtonArray[cUserRowIndex, cUserColIndex].BackColor = Color.LightGreen;
+
+                }
+
+                /*----this else conditition is if the first element in the wait list array is not empty, meaning there is someone on the wait list----*/
+                else
+                {
+                    cAirlineSeats[cUserRowIndex, cUserColIndex] = waitListList[0];
+                    cAirlineSeatsAvailability[cUserRowIndex, cUserColIndex] = false;
+
+                    PopUpMessage("There was a customer on the wait list, customer " + waitListList[0] + " has been assigned seat " + cUserRow + cUserCol + " and removed from the wait list.");
+
+                    for (int i = 0; i < waitListList.Length; i++)
+                    {
+                        if (waitListList[i + 1] != "")
+                        {
+                            waitListList[i] = waitListList[i + 1];
+                            waitListList[i + 1] = "";
+                        }
+                        else
+                        {
+                            waitListList[i] = "";
+                            i = waitListList.Length;
+                        }
+                    }
+
+                    if (waitListList[0] != "")
+                    {
+                        PopUpMessage("Customer " + waitListList[0] + " is now first in the wait list.");
+                    }
+
+                    labelWaitListList.Text = "";
+                    
+                }
+
+                labelPassengerList.Text = "";
+
+                ResetFields();
+                
+            }
+        }
+
+        private void buttonShowWaitList_Click(object sender, EventArgs e)
+        {
+            if (waitListList[0] == "")
+            {
+                PopUpMessage("There currently is no one on the wait list.");
+            }
+            else
+            {
+                for (int i = 0; i < waitListList.Length; i++)
+                {
+                    if (waitListList[i] == "")
+                    {
+
+                    }
+                    else if (i == 0)
+                    {
+                        labelWaitListList.Text = (i + 1) + ". " + waitListList[i];
+                    }
+                    else
+                    {
+                        labelWaitListList.Text = labelWaitListList.Text + "\n" + (i + 1) + ". " + waitListList[i];
+                    }
+                }
+            }
+        }
+
+        private void buttonAddWaitList_Click(object sender, EventArgs e)
+        {
+            if (cAllSeatsFull != true)
+            {
+                PopUpMessage("You cannot be added to the wait list if there are available seats.");
+            }
+            else
+            {
+                if (textBoxFirstName.Text == "" || textBoxLastName.Text == "")
+                {
+                    PopUpMessage("You must enter your name to be added to the wait list.");
+                }
+                else
+                {
+                    for (int i = 0; i < waitListList.Length; i++)
+                    {
+                        if (waitListList[i] == "")
+                        {
+                            waitListList[i] = textBoxLastName.Text + ", " + textBoxFirstName.Text;
+                            i = waitListList.Length;
+                        }
+                    }
+                    PopUpMessage("Passenger " + textBoxLastName.Text + ", " + textBoxFirstName.Text + " has been added to the wait list.");
+                }
+            }
+        }
+
+        private void buttonBookedPassengers_Click(object sender, EventArgs e)
+        {
+            bool hasBookedSeats = false;
+            string whichRow = "";
+
+            labelPassengerList.Text = "";
+
+            for (int i = 0; i < cNumRows; i++)
+            {
+                for (int j = 0; j < cNumCols; j++)
+                {
+                    if (cAirlineSeatsAvailability[i, j] == false)
+                    {
+                        hasBookedSeats = true;
+                        i = cNumRows;
+                        j = cNumCols;
+                    }
+                }
+            }
+
+            if (hasBookedSeats == false)
+            {
+                PopUpMessage("There are no booked passengers.");
+            }
+            else
+            {
+                for (int i = 0; i < cNumRows; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            whichRow = "A";
+                            break;
+                        case 1:
+                            whichRow = "B";
+                            break;
+                        case 2:
+                            whichRow = "C";
+                            break;
+                    }
+
+                    for (int j = 0; j < cNumCols; j++)
+                    {
+                        if (cAirlineSeatsAvailability[i, j] == false)
+                        {
+                            labelPassengerList.Text += "Seat " + whichRow + (j + 1) + ": " + cAirlineSeats[i, j] + "\n";
+                        }
+                    }
+                }
+            }
+        }
+
+        /*----------------------------debug buttons---------------------------*/
+
+        private void buttonFillAllSeats_Click(object sender, EventArgs e)
+        {
+            string whichRow = "";
+
+            Button whichDebug = sender as Button;
+
+            bool buttonIsFillAll = false;
+
+            ResetFields();
+
+            if (whichDebug.Name  == "buttonFillAllSeats")
+            {
+                buttonIsFillAll = true;
+                cAllSeatsFull = true;
+            }
+            else
+            {
+                cAllSeatsFull = false;
+                labelWaitListList.Text = "";
+                labelPassengerList.Text = "";
+
+                for (int i = 0; i < waitListList.Length; i++)
+                {
+                    waitListList[i] = "";
+                }
+            }
+
+            for (int i = 0; i < cNumRows; i++)
+            {
+                switch (i)
+                {
+                    case 0:
+                        whichRow = "A";
+                        break;
+                    case 1:
+                        whichRow = "B";
+                        break;
+                    case 2:
+                        whichRow = "C";
+                        break;
+                }
+
+                for (int j = 0; j < cNumCols; j++)
+                {
+
+                    if (buttonIsFillAll == true)
+                    {
+                        cAirlineSeats[i, j] = "Test " + whichRow + (j + 1);
+                        cAirlineSeatsAvailability[i, j] = false;
+                        seatButtonArray[i, j].BackColor = Color.OrangeRed;
+                    }
+                    else
+                    {
+                        cAirlineSeats[i, j] = whichRow + j;
+                        cAirlineSeatsAvailability[i, j] = true;
+                        seatButtonArray[i, j].BackColor = Color.LightGreen;
+                    }
+                    
+                }
+            }
+        }
+
+        /*------------------------buttons actions begin--------------------------*/
+
+        public void FillFieldsFromButton(string whichSeat)
+        {
+            string whichRow = whichSeat[0].ToString();
+            string whichCol = whichSeat[1].ToString();
+
+            cUserRow = whichRow;
+            cUserCol = whichCol;
+
+            switch (whichRow)
+            {
+                case "A":
+                    cUserRowIndex = 0;
+                    break;
+                case "B":
+                    cUserRowIndex = 1;
+                    break;
+                case "C":
+                    cUserRowIndex = 2;
+                    break;
+            }
+
+            cUserColIndex = int.Parse(whichCol) - 1;
+
+            listBoxRow.SelectedIndex = cUserRowIndex;
+            listBoxCol.SelectedIndex = cUserColIndex;
+
+            labelUserSeatSelection.Text = "Seat " + cUserRow + cUserCol;
+        }
+
+        private void buttonA1_Click(object sender, EventArgs e)
+        {
+            Button whichButton = sender as Button;
+
+            string whichSeat = whichButton.Name[6].ToString() + whichButton.Name[7].ToString();
+
+            FillFieldsFromButton(whichSeat);
+        }
+
+    }
+}
+</pre>
+</body>
+</html>

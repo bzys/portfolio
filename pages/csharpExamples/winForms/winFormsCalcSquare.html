@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!--
+	Author:		Bill Sun
+	Page Name:	winFormsCalcSquare.html
+	
+    Revision History:
+        [2019-01-04] revised page
+		[2018-07-22] created page	
+-->
+<html lang="en">
+<body>
+	<a href="./winForms.html">[Back]</a>
+	<br>
+<pre>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace bsun1453inClass03
+{
+    public partial class FormCalculateBox : Form
+    {
+        int initX = 0;
+        int initY = 0;
+        int initZ = 0;
+        int extendX = 0;
+        int extendY = 0;
+        int extendZ = 0;
+        public FormCalculateBox()
+        {
+            InitializeComponent();
+        }
+
+        public class BoxPoints
+        {
+            private int x;
+            private int y;
+            private int z;
+
+            public BoxPoints(int pX, int pY, int pZ)
+            {
+                x = pX;
+                y = pY;
+                z = pZ;
+            }
+            public int pointX
+            {
+                set { x = value; }
+                get { return x; }
+            }
+            public int pointY
+            {
+                set { y = value; }
+                get { return y; }
+            }
+            public int pointZ
+            {
+                set { z = value; }
+                get { return z; }
+            }
+        }
+
+        //volume needs 4 point to calculate, to get the x-y-z coordinates for the points to find the length of each side
+        public class Volume
+        {
+            private BoxPoints pointA;
+            private BoxPoints pointB;
+            private BoxPoints pointD;
+            private BoxPoints pointE;
+
+            public BoxPoints PointA
+            {
+                set { pointA = value; }
+                get { return pointA; }
+            }
+            public BoxPoints PointB
+            {
+                set { pointB = value; }
+                get { return pointB; }
+            }
+            public BoxPoints PointD
+            {
+                set { pointD = value; }
+                get { return pointD; }
+            }
+
+            public BoxPoints PointE
+            {
+                set { pointE = value; }
+                get { return pointE; }
+            }
+
+            public int getVolume(BoxPoints pointA, BoxPoints pointB, BoxPoints pointD, BoxPoints pointE)
+            {
+                return ((pointD.pointX - pointA.pointX) * (pointB.pointY - pointA.pointY) * (pointE.pointZ - pointA.pointZ));
+            }
+        }
+
+        private void buttonCalculate_Click(object sender, EventArgs e)
+        {
+            initX = int.Parse(textBoxInitX.Text);
+            initY = int.Parse(textBoxInitY.Text);
+            initZ = int.Parse(textBoxInitZ.Text);
+            extendX = int.Parse(textBoxExtendX.Text);
+            extendY = int.Parse(textBoxExtendY.Text);
+            extendZ = int.Parse(textBoxExtendZ.Text);
+
+            BoxPoints defaultPointA = new BoxPoints(initX, initY, initZ);
+            BoxPoints pointB = new BoxPoints(initX, (initY + extendY), initZ);
+            BoxPoints pointC = new BoxPoints((initX + extendX), (initY + extendY), initZ);
+            BoxPoints pointD = new BoxPoints((initX + extendX), initY, initZ);
+
+            BoxPoints pointE = new BoxPoints(initX, initY, (initZ + extendZ));
+            BoxPoints pointF = new BoxPoints(initX, (initY + extendY),(initZ + extendZ));
+            BoxPoints pointG = new BoxPoints((initX + extendX), (initY + extendY), (initZ + extendZ));
+            BoxPoints pointH = new BoxPoints((initX + extendX), initY, (initZ + extendZ));
+
+            Volume myVol = new Volume();
+
+            int saABCD = 0;
+            int saBCFG = 0;
+            int saCDGH = 0;
+            int vol = 0;
+
+            richTextBoxDisplay.Text = "The points of the rectangle are as follows (in x, y, z order): \n\n" + 
+                                        "A: " + defaultPointA.pointX + ", " + defaultPointA.pointY + ", " + defaultPointA.pointZ + "\n" +
+                                        "B: " + pointB.pointX + ", " + pointB.pointY + ", " + pointB.pointZ + "\n" +
+                                        "C: " + pointC.pointX + ", " + pointC.pointY + ", " + pointC.pointZ + "\n" +
+                                        "D: " + pointD.pointX + ", " + pointD.pointY + ", " + pointD.pointZ + "\n" +
+                                        "E: " + pointE.pointX + ", " + pointE.pointY + ", " + pointE.pointZ + "\n" +
+                                        "F: " + pointF.pointX + ", " + pointF.pointY + ", " + pointF.pointZ + "\n" +
+                                        "G: " + pointG.pointX + ", " + pointG.pointY + ", " + pointG.pointZ + "\n" +
+                                        "H: " + pointH.pointX + ", " + pointH.pointY + ", " + pointH.pointZ + "\n";
+
+            saABCD = calculateSurfaceArea((pointB.pointY - defaultPointA.pointY), (pointD.pointX - defaultPointA.pointX));
+            saBCFG = calculateSurfaceArea((pointF.pointZ - pointB.pointZ), (pointG.pointX - pointF.pointX));
+            saCDGH = calculateSurfaceArea((pointC.pointY - pointD.pointY), (pointH.pointZ - pointD.pointZ));
+
+            richTextBoxDisplay.Text += "\nThe surface area of the 3 surfaces are as follows: \n\n" +
+                                        "Surface ABCD: " + saABCD + "\n" +
+                                        "Surface BCFG: " + saBCFG + "\n" +
+                                        "Surface CDGH: " + saCDGH + "\n";
+
+            vol = myVol.getVolume(defaultPointA, pointB, pointD, pointE);
+
+            richTextBoxDisplay.Text += "\nThe volumne of the rectangle is as follows: \n\n" +
+                                        "Volumne: " + vol + "\n";
+
+            
+        }
+
+        public int calculateSurfaceArea(int a, int b)
+        {
+            int sa = 0;
+
+            sa = a * b;
+
+            return sa;
+        }
+    }
+}
+</pre>
+</body>
+</html>

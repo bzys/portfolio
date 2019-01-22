@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--
+	Author:		Bill Sun
+	Page Name:	monoGame.html
+
+	Revision History:
+		[2019-01-04] page created
+-->
+<html lang="en">
+	<script src="../../../js/javascript.js"></script>
+<head>
+	<meta charset="utf-8">
+	<title>Portfolio - MonoGame</title>
+	<link rel="stylesheet" href="../../../styles/normalize.css">
+	<link rel="stylesheet" href="../../../styles/style.css">
+</head>
+<body onload="focusThis()">
+	<header>
+		<p>Portfolio</p>
+		<h1>MonoGame Projects</h1>
+		<p>./pages/csharpExamples/monoGame/monoGame.html</p>
+		<br>
+	</header>
+	
+	<nav id="nav_menu">
+		<ul>
+			<li><a href="../../../index.html">Home</a></li>
+			<li><a href="#" class="current">Coding</a>
+				<ul>
+					<li><a href="../../csharp.html">C#</a>
+						<ul>
+							<li><a href="#">MonoGame Projects</a></li>
+							<li><a href="../winForms/winForms.html">Windows Forms</a></li>
+						</ul>
+					</li>
+					<li><a href="../../webCode.html">HTML/CSS/JS/PHP</a></li>
+				</ul>
+			</li>
+			<li><a href="#">3D Modelling</a>
+				<ul>
+					<li><a href="../../lightwave.html">NewTek LightWave</a></li>
+					<li><a href="../../gameMods.html">Video Game Mods</a>
+						<ul>
+							<li><a href="../../gameMods/modsKSP.html">Kerbal Space Program</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><a href="../../contact.html">About & Contact Me</a></li>
+		</ul>
+	</nav>
+	
+	<main>
+		<br>
+		<h3>About</h3>
+		<p>Here are some school-related projects completed in C# using the MonoGame framework. The MonoGame framework was used as per course requirements.</p>
+		<p>The MonoGame (formerly XNA) framework is a free C# framework used to make games for multiple platforms. 
+			More information about the MonoGame framework can be found on <a href="https://en.wikipedia.org/wiki/MonoGame" target="_blank">Wikipedia</a> , or on the <a href="http://www.monogame.net/" target="_blank">MonoGame website</a>.</p>
+		<br>
+		<hr>
+
+		<h3>PROG2370 - Course Project</h3>
+		<a href="https://github.com/bzys/prog2370final" target="_blank">[Github Repo Link]</a>
+
+		<p><b>About:</b></p>
+		<p>This game was made in MonoGame as the final project for the PROG2370: Game Programming with Data Structures course. The game I made was heavily inspired by the video game Tom Clancy's Rainbow Six: Seige.</p>
+		<p>My game shares similar features such as destroyable walls and multiple usable weapons. All models in game are created by me, and all code are my own unless otherwise stated.</p>
+		<br>
+
+		<div class="slideshowContainer">
+
+			<div class="mySlides fade">
+			  	<img src="../../../images/monoGame/seigeGameplay.jpg" style="width:800px">
+			  	<div class="text">Project gameplay screenshot</div>
+			</div>
+			
+			<div class="mySlides fade">
+			  	<img src="../../../images/monoGame/seigeHelp.jpg" style="width:800px">
+				<div class="text">Project gameplay help screen</div>
+			</div>
+			
+			<div class="mySlides fade">
+			  	<img src="../../../images/monoGame/seigeSplash.jpg" style="width:800px">
+				<div class="text">Porject game splash screen</div>
+			</div>
+
+			<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+			<a class="next" onclick="plusSlides(1)">&#10095;</a>
+			
+		</div>
+		
+		<br>
+			
+		<div style="text-align:center">
+			<span class="dot" onclick="currentSlide(1)"></span> 
+			<span class="dot" onclick="currentSlide(2)"></span> 
+			<span class="dot" onclick="currentSlide(3)"></span> 
+		</div>	
+
+		<br>
+		<hr>
+
+		<h3>PROG2370 - Assignment: Tic Tac Toe</h3>
+		<a href="https://github.com/bzys/prog2370tictactoe" target="_blank">[Github Repo Link]</a>
+		<p><b>About:</b></p>
+		<p>A simple Tic Tac Toe game made using MonoGame.</p>
+		<p><img id="img" src="../../../images/monoGame/tictactoe.JPG"></p>
+
+	</main>
+	<footer>
+		<br>
+		<hr>
+		<p style="text-align: right">Bill Sun</p>
+	</footer>
+
+	<script>
+			showSlides(1);
+	</script>
+</body>
+</html>

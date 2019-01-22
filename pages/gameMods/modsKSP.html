@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--
+	Author:		Bill Sun
+	Page Name:	modsKSP.html
+	
+	Revision History:
+		[2019-01-04] revised content
+		[2018-07-22] page created
+-->
+<html lang="en">
+	<script src="../../js/javascript.js"></script>
+<head>
+	<meta charset="utf-8">
+	<title>Portfolio - KSP Mods</title>
+	<link rel="stylesheet" href="../../styles/normalize.css">
+	<link rel="stylesheet" href="../../styles/style.css">
+</head>
+<body onload="focusThis()">
+	<header>
+		<p>Portfolio</p>
+		<h1>Kerbal Space Program Mods</h1>
+		<p>./pages/gameMods/modsKSP.html</p>
+		<br>
+	</header>
+	
+	<nav id="nav_menu">
+		<ul>
+			<li><a href="../../index.html">Home</a></li>
+			<li><a href="#">Coding</a>
+				<ul>
+					<li><a href="../csharp.html">C#</a>
+						<ul>
+							<li><a href="../csharpExamples/monoGame/monoGame.html">MonoGame Projects</a></li>
+							<li><a href="../csharpExamples/winForms/winForms.html">Windows Forms</a></li>
+						</ul>
+					</li>
+					<li><a href="../webCode.html">HTML/CSS/JS/PHP</a></li>
+				</ul>
+			</li>
+			<li><a href="#" class="current">3D Modelling</a>
+				<ul>
+					<li><a href="../lightwave.html">NewTek LightWave</a></li>
+					<li><a href="../gameMods.html">Video Game Mods</a>
+						<ul>
+							<li><a href="#">Kerbal Space Program</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li><a href="../contact.html">About & Contact Me</a></li>
+		</ul>
+	</nav>
+	
+	<main>
+		<br>
+
+		<p>Here are some of the mods I made for Kerbal Space Program.</p>
+		<p>Kerbal Space Program, abbreviated to KSP, is a physics-based, space flight simulation game where the player builds rockets for and launches little green
+			characters into space. Within the game, there are multiple planets, moons, and asteroids the player can visit utilizing their own creations.<sup><a href="https://en.wikipedia.org/wiki/Kerbal_Space_Program" target="_blank">[Wikipedia]</a></sup>.</p>
+
+		<p>KSP is one of my most-played video games, with many hours sunk into it. Fortunately, KSP is build on the Unity Game Engine, which is a powerful and
+			flexiable game engine that allows easy modifications of the game. So I decided to combine two of my hobbies and make mods for KSP!</p>
+
+		<p>Below are some of the mods I've made over the years for Kerbal Space Program.</p>
+
+		<br>
+
+		<div class="slideshowContainer">
+
+			<div class="mySlides fade">
+			  	<img src="../../images/kspMerlinLW.jpg" style="width:800px">
+			  	<div class="text">Supermarine Spitfire-inspired engine as laid out and textured in LightWave</div>
+			</div>
+			
+			<div class="mySlides fade">
+			  	<img src="../../images/kspMerlinKSP.jpg" style="width:800px">
+				<div class="text">The same engine imported into KSP</div>
+			</div>
+
+			<div class="mySlides fade">
+			  	<img src="../../images/kspZeroLW.jpg" style="width:800px">
+				<div class="text">Mitsubishi A6M-inspired cockpit laid out and textured in LightWave</div>
+			</div>
+
+			<div class="mySlides fade">
+			  	<img src="../../images/kspZeroOut.jpg" style="width:800px">
+				<div class="text">The same cockpit imported into KSP</div>
+			</div>
+
+			<div class="mySlides fade">
+			  	<img src="../../images/kspZeroIn.jpg" style="width:800px">
+				<div class="text">Interior view of the cockpit</div>
+			</div>
+
+			<div class="mySlides fade">
+			  	<img src="../../images/kspZeroIntOver.jpg" style="width:800px">
+				<div class="text">The A6M cockpit with interior overlay enabled in-game</div>
+			</div>
+			
+			<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+			<a class="next" onclick="plusSlides(1)">&#10095;</a>
+			
+		</div>
+		
+		<br>
+		
+		<div style="text-align:center">
+			<span class="dot" onclick="currentSlide(1)"></span> 
+			<span class="dot" onclick="currentSlide(2)"></span> 
+			<span class="dot" onclick="currentSlide(3)"></span> 
+			<span class="dot" onclick="currentSlide(4)"></span> 
+			<span class="dot" onclick="currentSlide(5)"></span> 
+			<span class="dot" onclick="currentSlide(6)"></span> 
+		</div>	
+
+		<br>
+
+	</main>
+	<footer>
+		<br>
+		<hr>
+		<p style="text-align: right">Bill Sun</p>
+	</footer>
+
+	<script>
+			showSlides(1);
+	</script>
+</body>
+</html>
